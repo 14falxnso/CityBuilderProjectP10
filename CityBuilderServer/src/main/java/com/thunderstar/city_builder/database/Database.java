@@ -1,9 +1,8 @@
 package com.thunderstar.city_builder.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     public static final String URL = "jdbc:sqlite:data/database.db";
@@ -18,5 +17,22 @@ public class Database {
 
         stmt.close();
         conn.close();
+    }
+
+    public static List<String> getAllTableNames() throws SQLException {
+        List<String> tables = new ArrayList<>();
+
+        Connection conn = DriverManager.getConnection(URL);
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet rs = meta.getTables(null, null, "%", new String[]{"TABLE"});
+
+        while (rs.next()) {
+            tables.add(rs.getString("TABLE_NAME"));
+        }
+
+        rs.close();
+        conn.close();
+
+        return tables;
     }
 }
