@@ -43,7 +43,7 @@ public class FishAI : MonoBehaviour
         transform.position = startPos;
 
         //check of de vis aan de ene kant staat en dan uhh spiegel that thang
-        if(startPos.x > (20f + 1900f) / 2)
+        if(startPos.x > (20f + 1900f) / 2 && Random.Range(0, 10) > 3)
         {
             Vector3 s = transform.localScale;
 
