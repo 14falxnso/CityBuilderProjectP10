@@ -6,21 +6,21 @@ public class FishingMove : MonoBehaviour
 {
     public float hookStandardHeight = 200f;
     public float hookSpeed = 10f;
-    public Vector2[] ropePosses;
+    public GameObject[] RopeParts = new GameObject[6];
     public int ropeDetail = 10;
     [SerializeField] private Vector2 mousePos = new Vector2(0, 0);
     [SerializeField] private RectTransform hookRect;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private float topOfScreen;
+    [SerializeField] private RopePart baseRopePart;
     private Vector2 lastPos;
     private Vector2 posThatHookShouldBe;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-
-        ropePosses = new Vector2[ropeDetail];
-        lineRenderer.positionCount = ropeDetail;
+        lineRenderer.positionCount = RopeParts.Length;
+        
     }
 
     //krijg de muis positie
@@ -49,7 +49,7 @@ public class FishingMove : MonoBehaviour
         posThatHookShouldBe = new Vector2(pos.x, hookStandardHeight);
 
         //zet de dingesen in de ropeposs dinges (jaja)
-        UpdateRopeArray(posThatHookShouldBe);
+        UpdateRope(posThatHookShouldBe);
     }
 
     void Update()
@@ -61,13 +61,18 @@ public class FishingMove : MonoBehaviour
         );
     }
 
-    private void UpdateRopeArray(Vector2 newValue)
+    private void UpdateRope(Vector2 newValue)
     {
-        for(int i = ropePosses.Length - 1; i > 0; i--)
-        {
-            ropePosses[i] = new Vector2(ropePosses[i - 1].x, ((topOfScreen - hookRect.position.y) / ropeDetail) * i);
-        }
+        baseRopePart.TransferPos(newValue);
+    }
 
-        ropePosses[0] = newValue;
+    void FixedUpdate() {
+        for(int i = 0; i < RopeParts.Length; i++)
+        {
+            lineRenderer.SetPosition(
+                i,
+                RopeParts[i].transform.position
+            );
+        }
     }
 }
