@@ -1,161 +1,116 @@
-using System;
 using TMPro;
 using UnityEngine;
 
 public class TimelineScript : MonoBehaviour
 {
-    private float time; // telt de tijd op // 3 seconde = 1 minuut
+    [Header("Time Settings")]
+    [SerializeField] private float secondsPerMinute = 3f;
+
+    private float time;
+
+    [Header("Time Info")]
+    private int minutes;
+    private int hours;
+    private int days = 1;
+    private int years = 2000;
+
+    [Header("Months")]
+    private string currentMonth;
+    private int monthCounter = 1;
+
+    private string[] months =
+    {
+        "January", "February", "March",
+        "April", "May", "June",
+        "July", "August", "September",
+        "October", "November", "December"
+    };
+
+    [Header("UI")]
     [SerializeField] private TextMeshProUGUI timelineText;
 
-    [Header("Tijd info")]
-    private float minutes;
-    private float hours;
-    private float days = 1;
-    private float years = 2000;
-
-    [Header("Maanden")]
-    private string currentMonth = monthName.January.ToString();
-    private int monthCounter = 1;
-    enum monthName
+    private void Start()
     {
-        January,
-        February,
-        March,
-        April,
-        May,
-        June,
-        July,
-        August,
-        September,
-        October,
-        November,
-        December
-    };
+        currentMonth = months[monthCounter - 1];
+        UpdateTimelineUI();
+    }
 
     private void Update()
     {
         time += Time.deltaTime;
-        CountTimeUp();
+
+        while (time >= secondsPerMinute)
+        {
+            time -= secondsPerMinute;
+            CountTimeUp();
+        }
     }
 
     private void CountTimeUp()
     {
-        if (time >= 1)
-        {
-            minutes++;
-            time = 0;
-        }
+        minutes++;
 
-        if (minutes >= 60) // 60
+        if (minutes >= 60)
         {
-            hours++;
             minutes = 0;
+            hours++;
         }
 
-        if (hours >= 24) // 24
+        if (hours >= 24)
         {
-            days++;
             hours = 0;
-        }
-        
-        if(days >= 28) // 28
-        {
-            MonthCalculator();
-
+            days++;
+            DayCalculator();
         }
 
-        UpdateText();
+        UpdateTimelineUI();
     }
-    
-    private void UpdateText()
+
+    private void DayCalculator()
     {
-        timelineText.text =
-            hours.ToString() + ":0" + minutes.ToString() + "\n" + // uur & minuut
-            days.ToString() + " " + currentMonth + " " + years.ToString(); // dag , maand, jaar
-        if (minutes >= 10)
+        int daysInMonth = 31;
+
+        if (monthCounter == 4 || monthCounter == 6||
+            monthCounter == 9 || monthCounter == 11)
         {
-            timelineText.text =
-            hours.ToString() + ":" + minutes.ToString() + "\n" + // uur & minuut
-            days.ToString() + " " + currentMonth + " " + years.ToString(); // dag , maand, jaar
+            daysInMonth = 30;
+        }
+        else if (monthCounter == 2)
+        {
+            daysInMonth = 28;
+
+            if (years % 4 == 0)
+            {
+                daysInMonth = 29;
+            }
         }
 
-        
+        if (days > daysInMonth)
+        {
+            days = 1;
+            MonthCalculator();
+        }
     }
-
     private void MonthCalculator()
     {
-        if(days == 31)
-        {
-            Month31DaysCalc();
-            days = 1;
-        } else if(days == 30)
-        {
-            Month30DaysCalc();
-            days= 1;
-        } else if (days == 28)
-        {
-            if (monthCounter == 2)
-                currentMonth = monthName.February.ToString();
-                days = 1;
-        }
-    }
-    
-    private void Month30DaysCalc()
-    {
-        if (monthCounter == 13)
+        monthCounter++;
+
+        if (monthCounter > 12)
         {
             monthCounter = 1;
-        } else if (monthCounter == 11)
-        {
-            currentMonth = monthName.November.ToString();
-        } else if(monthCounter == 9){
-            currentMonth = monthName.September.ToString();
+            years++;
         }
-        else if (monthCounter == 6)
-        {
-            currentMonth = monthName.June.ToString();
-        }
-        else if (monthCounter == 4)
-        {
-            currentMonth = monthName.April.ToString();
-        }
-        monthCounter++;  
+
+        currentMonth = months[monthCounter - 1];
     }
 
-    private void Month31DaysCalc()
+    private void UpdateTimelineUI()
     {
-        if (monthCounter == 12)
-        {
-            currentMonth = monthName.December.ToString();
-        }
-        else if (monthCounter == 10)
-        {
-            currentMonth = monthName.October.ToString();
-        }
-        else if (monthCounter == 8)
-        {
-            currentMonth = monthName.August.ToString();
-        }
-        else if (monthCounter == 7)
-        {
-            currentMonth = monthName.July.ToString();
-        }
-        else if (monthCounter == 5)
-        {
-            currentMonth = monthName.May.ToString();
-        }
-        else if (monthCounter == 3)
-        {
-            currentMonth = monthName.March.ToString();
-        }
-        else if (monthCounter == 1)
-        {
-            currentMonth = monthName.January.ToString();
-        }
-
-        monthCounter++;
+        timelineText.text =
+            hours.ToString("00") + ":" +
+            minutes.ToString("00") + " | " +
+            days.ToString("00") + " " +
+            currentMonth + " " +
+            years.ToString();
     }
-
-
-
 }
