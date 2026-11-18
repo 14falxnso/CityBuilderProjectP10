@@ -4,14 +4,15 @@ using UnityEngine;
 public class GridSystem : MonoBehaviour
 {
     [Header("Building")]
-    public GameObject objectToPlace;
-    public Vector2Int buildingSize = new Vector2Int(1, 1); // width (X) and depth (Z) in cells
-    public float yOffset = 0.5f;                           // half the building's height if pivot is centered
+    public BuildingSriptable buildingData;
+    private GameObject objectToPlace;
+    private Vector2Int buildingSize = new Vector2Int(1, 1); // width (X) and depth (Z) in cells
+    private float yOffset = 0.5f;                           // half the building's height if pivot is centered
     public KeyCode rotateKey = KeyCode.R;
 
     [Header("Pivot Correction")]
-    public float pivotOffsetX = 0f;
-    public float pivotOffsetZ = 0f;
+    private float pivotOffsetX = 0f;
+    private float pivotOffsetZ = 0f;
 
     [Header("Grid")]
     public float gridSize = 1f;
@@ -33,6 +34,15 @@ public class GridSystem : MonoBehaviour
     private Vector2Int EffectiveSize =>
         (rotationSteps % 2 == 0) ? buildingSize : new Vector2Int(buildingSize.y, buildingSize.x);
 
+    private void Awake()
+    {
+        objectToPlace = buildingData != null ? buildingData.buildingPrefab : objectToPlace;
+        yOffset = buildingData != null ? buildingData.yOffset : yOffset;
+        pivotOffsetX = buildingData != null ? buildingData.pivotOffsetX : pivotOffsetX;
+        pivotOffsetZ = buildingData != null ? buildingData.pivotOffsetZ : pivotOffsetZ;
+        buildingSize = buildingData != null ? buildingData.size : buildingSize;
+
+    }
     private void Start()
     {
         CreateTempObject();
@@ -146,7 +156,6 @@ public class GridSystem : MonoBehaviour
         foreach (Renderer renderer in tempObject.GetComponentsInChildren<Renderer>())
             renderer.material.color = new Color(color.r, color.g, color.b, 0.5f);
     }
-
     private void DrawGrid()
     {
         GameObject gridParent = new GameObject("Grid Lines");

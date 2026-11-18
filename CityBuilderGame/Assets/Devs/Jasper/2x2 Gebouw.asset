@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d660a83a87703bc47b5c3243aca243f6, type: 3}
+  m_Name: 2x2 Gebouw
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingSriptable
+  buildingPrefab: {fileID: 9053990753874104302, guid: 5c8af40a2fae9424b86ac6664e9159e7, type: 3}
+  size: {x: 2, y: 2, z: 2}
+  yOffset: 0.5
+  pivotOffsetX: 0.5
+  pivotOffsetZ: 0.5
