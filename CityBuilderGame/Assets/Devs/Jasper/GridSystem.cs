@@ -26,6 +26,8 @@ public class GridSystem : MonoBehaviour
     public Material lineMaterial;
     public float lineWidth = 0.02f;
 
+    public bool BuildingModeActive { get; private set; } = true;
+
     private GameObject tempObject;
     private static readonly HashSet<Vector2Int> occupiedCells = new HashSet<Vector2Int>();
     private int rotationSteps = 0; // 0..3, each step = 90 degrees
@@ -36,6 +38,7 @@ public class GridSystem : MonoBehaviour
 
     private void Awake()
     {
+        BuildingModeActive = false;
         objectToPlace = buildingData != null ? buildingData.buildingPrefab : objectToPlace;
         yOffset = buildingData != null ? buildingData.yOffset : yOffset;
         pivotOffsetX = buildingData != null ? buildingData.pivotOffsetX : pivotOffsetX;
@@ -45,6 +48,8 @@ public class GridSystem : MonoBehaviour
     }
     private void Start()
     {
+        if (!BuildingModeActive) return;
+
         CreateTempObject();
         DrawGrid();
         rotationSteps = (rotationSteps + 1) % 4;
@@ -53,6 +58,8 @@ public class GridSystem : MonoBehaviour
 
     private void Update()
     {
+        if (!BuildingModeActive) return;
+
         if (Input.GetKeyDown(rotateKey))
         {
             rotationSteps = (rotationSteps + 1) % 4;
@@ -67,6 +74,8 @@ public class GridSystem : MonoBehaviour
 
     private void UpdateTempPosition()
     {
+        if (!BuildingModeActive) return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit)) return;
 
@@ -188,6 +197,8 @@ public class GridSystem : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!BuildingModeActive) return;
+
         Gizmos.color = Color.red;
 
         foreach (Vector2Int cell in occupiedCells)
