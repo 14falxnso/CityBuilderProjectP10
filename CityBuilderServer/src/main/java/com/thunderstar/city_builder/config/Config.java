@@ -32,5 +32,8 @@ public class Config {
 
     public static class ConfigData {
         public int magicInt = 42;
+        public int threads = Runtime.getRuntime().availableProcessors();
+        public int port = 25565;
+        public String path = "/city_builder";
     }
 }

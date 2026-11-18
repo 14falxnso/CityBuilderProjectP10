@@ -24,7 +24,7 @@ public class Commands {
     public static Map<String, Command> commands = new HashMap<>();
 
 
-    public static void Init() {
+    public static void init() {
         new Command("help", 0, args -> {
             GuiApp.instance.command("Commands:");
 

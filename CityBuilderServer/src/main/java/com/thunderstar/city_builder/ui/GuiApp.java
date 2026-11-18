@@ -233,6 +233,13 @@ public class GuiApp extends JFrame {
         });
     }
 
+    public void logStackTrace(Throwable e) {
+        log(e.toString());
+        for (StackTraceElement element : e.getStackTrace()) {
+            log("    at " + element.toString());
+        }
+    }
+
     public void setProgress(double progress, String header) {
         SwingUtilities.invokeLater(() -> {
             progressBar.setVisible(true);

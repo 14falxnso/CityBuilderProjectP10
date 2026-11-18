@@ -756,7 +756,7 @@ GameObject:
   - component: {fileID: 1853070735}
   - component: {fileID: 1853070734}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Grid Script
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -774,14 +774,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34edd535fdba4b43a62211a8dc3c426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridSystem
+  buildingData: {fileID: 11400000, guid: 4db0a69d48f16c446aeae87bd3f3db04, type: 2}
   objectToPlace: {fileID: 7348993274184691200, guid: a000816ccd969d04db8f47d0ba313676, type: 3}
+  buildingSize: {x: 1, y: 1}
+  yOffset: 0.5
+  rotateKey: 114
+  pivotOffsetX: 0.5
+  pivotOffsetZ: 0.5
   gridSize: 1
-  lineMaterial: {fileID: 2100000, guid: 821d1b36fb0ca4d4084a8d6bbeff7439, type: 2}
   gridWidth: 50
   gridHeight: 50
   gridX: -30
   gridY: 0.7
   gridZ: -19
+  lineMaterial: {fileID: 2100000, guid: 821d1b36fb0ca4d4084a8d6bbeff7439, type: 2}
   lineWidth: 0.02
 --- !u!4 &1853070735
 Transform:
