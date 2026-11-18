@@ -27,7 +27,7 @@ public class GridSystem : MonoBehaviour
     public float lineWidth = 0.02f;
 
     private GameObject tempObject;
-    private readonly HashSet<Vector2Int> occupiedCells = new HashSet<Vector2Int>();
+    private static readonly HashSet<Vector2Int> occupiedCells = new HashSet<Vector2Int>();
     private int rotationSteps = 0; // 0..3, each step = 90 degrees
     private Vector2Int currentOrigin;
     private bool canPlace;
@@ -41,7 +41,7 @@ public class GridSystem : MonoBehaviour
         pivotOffsetX = buildingData != null ? buildingData.pivotOffsetX : pivotOffsetX;
         pivotOffsetZ = buildingData != null ? buildingData.pivotOffsetZ : pivotOffsetZ;
         buildingSize = buildingData != null ? buildingData.size : buildingSize;
-
+        occupiedCells.Clear();
     }
     private void Start()
     {
@@ -184,5 +184,21 @@ public class GridSystem : MonoBehaviour
         lr.useWorldSpace = true;
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        foreach (Vector2Int cell in occupiedCells)
+        {
+            Vector3 cellCenter = new Vector3(
+                gridX + (cell.x + 0.5f) * gridSize,
+                gridY,
+                gridZ + (cell.y + 0.5f) * gridSize
+            );
+
+            Gizmos.DrawWireCube(cellCenter, new Vector3(gridSize * 0.95f, 0.1f, gridSize * 0.95f));
+        }
     }
 }

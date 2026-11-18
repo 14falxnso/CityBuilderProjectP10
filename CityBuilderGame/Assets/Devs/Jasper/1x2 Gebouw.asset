@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1x2 Gebouw
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSriptable
   buildingPrefab: {fileID: 7348993274184691200, guid: a000816ccd969d04db8f47d0ba313676, type: 3}
-  size: {x: 2, y: 2, z: 1}
+  size: {x: 2, y: 2}
   yOffset: 0.5
-  pivotOffsetX: 0.5
-  pivotOffsetZ: 0
+  pivotOffsetX: 0
+  pivotOffsetZ: 0.5
