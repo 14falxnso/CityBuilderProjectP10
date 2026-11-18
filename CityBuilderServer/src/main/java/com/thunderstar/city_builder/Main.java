@@ -1,9 +1,13 @@
 package com.thunderstar.city_builder;
 
+import com.google.gson.Gson;
 import com.thunderstar.city_builder.config.Config;
+import com.thunderstar.city_builder.connection.EventStream;
+import com.thunderstar.city_builder.connection.RequestResponse;
 import com.thunderstar.city_builder.database.Database;
 import com.thunderstar.city_builder.ui.GuiApp;
 import com.thunderstar.city_builder.util.Commands;
+import com.thunderstar.city_builder.util.Threading;
 
 import javax.swing.*;
 
@@ -20,13 +24,21 @@ public class Main {
                 Database.init();
                 GuiApp.instance.log("Database initialized.");
 
-                Commands.Init();
+                Commands.init();
                 GuiApp.instance.log("commands loaded.");
+
+                Threading.init();
+                GuiApp.instance.log("Thread pool initialized.");
+
+                EventStream.init();
+                RequestResponse.init();
+
+                RequestResponse.RegisterResponse("test", obj -> {
+                    GuiApp.instance.log(new Gson().toJson(obj));
+                    return obj;
+                });
             } catch (Exception e) {
-                GuiApp.instance.log(e.toString());
-                for (StackTraceElement element : e.getStackTrace()) {
-                    GuiApp.instance.log("    at " + element.toString());
-                }
+                GuiApp.instance.logStackTrace(e);
             }
         });
     }

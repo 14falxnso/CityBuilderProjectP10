@@ -775,13 +775,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridSystem
   objectToPlace: {fileID: 7348993274184691200, guid: a000816ccd969d04db8f47d0ba313676, type: 3}
+  buildingSize: {x: 1, y: 1}
+  yOffset: 0.5
+  rotateKey: 114
+  pivotOffsetX: 0.5
+  pivotOffsetZ: 0
   gridSize: 1
-  lineMaterial: {fileID: 2100000, guid: 821d1b36fb0ca4d4084a8d6bbeff7439, type: 2}
   gridWidth: 50
   gridHeight: 50
   gridX: -30
   gridY: 0.7
   gridZ: -19
+  lineMaterial: {fileID: 2100000, guid: 821d1b36fb0ca4d4084a8d6bbeff7439, type: 2}
   lineWidth: 0.02
 --- !u!4 &1853070735
 Transform:
