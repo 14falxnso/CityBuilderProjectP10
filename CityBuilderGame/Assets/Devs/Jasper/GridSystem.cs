@@ -26,7 +26,7 @@ public class GridSystem : MonoBehaviour
     public Material lineMaterial;
     public float lineWidth = 0.02f;
 
-    public bool BuildingModeActive { get; private set; } = true;
+    public bool BuildingModeActive = true;
 
     private GameObject tempObject;
     private static readonly HashSet<Vector2Int> occupiedCells = new HashSet<Vector2Int>();
