@@ -74,7 +74,7 @@ public class FishingMove : MonoBehaviour
                 p.x,
                 p.y,
                 0f
-            )
+            ) + Vector3.down * 50f
         );
 
     }
