@@ -80,4 +80,14 @@ public class FishAI : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    //vis wordt... gevangen.......
+    private void OnTriggerEnter(Collider other) {
+        Debug.Log("fish found yaaay");
+
+        if (other.gameObject.CompareTag("HookCollider"))
+        {
+            Destroy(gameObject);
+        }
+    }
 }

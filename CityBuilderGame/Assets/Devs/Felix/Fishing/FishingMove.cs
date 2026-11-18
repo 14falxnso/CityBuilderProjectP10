@@ -8,13 +8,18 @@ public class FishingMove : MonoBehaviour
     public float hookSpeed = 10f;
     public GameObject[] RopeParts = new GameObject[6];
     public int ropeDetail = 10;
+
     [SerializeField] private Vector2 mousePos = new Vector2(0, 0);
+    [SerializeField] private Vector2 worldPos = new Vector2(0, 0);
+
     [SerializeField] private RectTransform hookRect;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private float topOfScreen;
     [SerializeField] private RopePart baseRopePart;
     private Vector2 lastPos;
     private Vector2 posThatHookShouldBe;
+
+    [SerializeField] private GameObject cursorCollider;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -54,11 +59,24 @@ public class FishingMove : MonoBehaviour
 
     void Update()
     {
+        if(!FishGameManager.Instance.isGameActive) return;
+
         hookRect.position = Vector2.Lerp(
             hookRect.position,
             posThatHookShouldBe,
             hookSpeed * Time.deltaTime
         );
+
+        Vector3 p = Camera.main.ScreenToWorldPoint(hookRect.position);
+
+        cursorCollider.transform.position = (
+            new Vector3(
+                p.x,
+                p.y,
+                0f
+            )
+        );
+
     }
 
     private void UpdateRope(Vector2 newValue)
@@ -67,6 +85,9 @@ public class FishingMove : MonoBehaviour
     }
 
     void FixedUpdate() {
+        //alleen bewegen als de game ACTIEF is
+        if(!FishGameManager.Instance.isGameActive) return;
+
         for(int i = 0; i < RopeParts.Length; i++)
         {
             lineRenderer.SetPosition(

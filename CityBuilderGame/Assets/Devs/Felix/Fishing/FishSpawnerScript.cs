@@ -21,6 +21,11 @@ public class FishSpawnerScript : MonoBehaviour
     {
         while (true)
         {
+            if (!FishGameManager.Instance.isGameActive)
+            {
+                yield break;
+            }
+
             yield return new WaitForSecondsRealtime(0.5f);
             SpawnFish();
         }
