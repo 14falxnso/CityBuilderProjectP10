@@ -16,6 +16,10 @@ public class PurchaseBuilding : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dataText;
     [SerializeField] private BuildingSriptable buildingObject;
 
+    [Header("Purchase Info")]
+    private bool purchasedBuilding = false;
+    private float notificationTimer;
+
     [Header("Costs")]
     [SerializeField] private int buildingLevel;
 
@@ -23,6 +27,9 @@ public class PurchaseBuilding : MonoBehaviour
     [SerializeField] private int currency2;
     [SerializeField] private int currency3;
 
+    [Header("Notificatie")]
+    [SerializeField] private GameObject boughtBuildingMessage;
+    [SerializeField] private TextMeshProUGUI bbMessageText;
 
     // player inventory linken
 
@@ -33,10 +40,18 @@ public class PurchaseBuilding : MonoBehaviour
 
     private void Update()
     {
+        if (boughtBuildingMessage.activeSelf)
+        {
+            notificationTimer += Time.deltaTime;
+            if (notificationTimer > 3)
+            {
+
+            }
+        }
         UpdateText();
     }
 
-    private void BuyBuilding() // moet op de button komen
+    public void BuyBuilding() // moet op de button komen
     {
 
         // tijdelijke resources -> moet later de player resources worden
@@ -44,24 +59,27 @@ public class PurchaseBuilding : MonoBehaviour
         int testCurrency2 = 100;
         int testCurrency3 = 100;
 
-        if (testCurrency1 >= currency1 | testCurrency2 >= currency2 | testCurrency3 >= currency3 ) // i a o dusss dit moet ja ook vervangen wortden
+        if (testCurrency1 >= currency1 && testCurrency2 >= currency2 && testCurrency3 >= currency3 && !lockImage.activeSelf) // i a o dusss dit moet ja ook vervangen wortden
         {
             testCurrency1 -= currency1;
             testCurrency2 -= currency2;
             testCurrency3 -= currency3;
 
             AddBuildingToPlayerInventory();
+            purchasedBuilding = true;
+            Debug.Log("kopen maatje");
         }
+        ShowNotification();
         UpdateText();
     }
 
-    private void RemoveLockImage() // de lock image verwijdeen
+    public void RemoveLockImage() // de lock image verwijdeen
     {
         int testPlayerLevel = 100; // MOET OOK VERVANGEN WORDEN
 
         if (testPlayerLevel >= buildingLevel)
         {
-            lockImage.SetActive(true);
+            lockImage.SetActive(false);
         }
     }
 
@@ -76,6 +94,21 @@ public class PurchaseBuilding : MonoBehaviour
     {
         buildingNameText.text = buildingName;
         dataText.text = currency1.ToString() + "|" + currency2.ToString() + "|" + currency3.ToString();
+    }
+
+    private void ShowNotification()
+    {
+        boughtBuildingMessage.SetActive(true);
+
+        if (purchasedBuilding == false)
+        {
+            bbMessageText.text = "Not enough level/resources.";
+        }
+        else
+        {
+            bbMessageText.text = "Purchased done!";
+        }
+
     }
 
 }
