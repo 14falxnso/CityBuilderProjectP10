@@ -1,3 +1,4 @@
+using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class FishAI : MonoBehaviour
     [Header("(multiplier!!!) [0] = minimum, [1] = maximum")]
     public float[] sizeRange = new float[2]{0.9f, 1.1f};
     private int flipFactor;
+    private bool isDead = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -66,6 +68,7 @@ public class FishAI : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(isDead) return;
         //animatie soort dinges!
         float angle = Mathf.Sin(Time.time * 10f) * 5f;
         transform.localRotation = Quaternion.Euler(0f, angle, 0f);
@@ -87,7 +90,27 @@ public class FishAI : MonoBehaviour
 
         if (other.gameObject.CompareTag("HookCollider"))
         {
-            Destroy(gameObject);
+            isDead = true;
+            StartCoroutine(FishDie());
         }
+    }
+
+    private IEnumerator FishDie()
+    {
+        if (isFlipped)
+        {
+            //yup yup yup yup het is gefixed yup yup
+            //wat een mooie code jajaja
+        }
+        
+        transform.Rotate(0f, 0f, 180f);
+
+        for(int i = 0; i < 50; i++)
+        {
+            transform.position += Vector3.up * 20f;
+            yield return new WaitForFixedUpdate();
+        }
+
+        Destroy(gameObject);
     }
 }
