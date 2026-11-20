@@ -15,6 +15,9 @@ public class FishAI : MonoBehaviour
     public float[] sizeRange = new float[2]{0.9f, 1.1f};
     private int flipFactor;
     private bool isDead = false;
+
+    [Header("world border x posses")]
+    public float[] worldBorder = new float[2];
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -76,6 +79,30 @@ public class FishAI : MonoBehaviour
         //die ene flip factor zorgt voor goede bewegin!
         transform.position -= Vector3.up * speedDown + Vector3.left * speed * flipFactor;
 
+        float Tx = transform.position.x;
+
+        //laat ze bouncen
+        if(Tx >= worldBorder[1])
+        {
+            isFlipped = true;
+            flipFactor = -1;
+
+            Vector3 s = transform.localScale;
+            //flip
+
+            transform.localScale = new Vector3(
+                -s.x,
+                s.y,
+                s.z
+            );
+        }
+
+        if(Tx <= worldBorder[0])
+        {
+            isFlipped = false;
+            flipFactor = 1;
+        }
+
 
         //zorgt ervoor dat ie dood wordt gemaakt als hij aan de onderkant zit
         if(transform.position.y <= -500)
@@ -91,6 +118,8 @@ public class FishAI : MonoBehaviour
         if (other.gameObject.CompareTag("HookCollider"))
         {
             isDead = true;
+            FishGameManager.Instance.FishCaught();
+
             StartCoroutine(FishDie());
         }
     }

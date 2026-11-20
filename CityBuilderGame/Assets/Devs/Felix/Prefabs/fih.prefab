@@ -705,6 +705,9 @@ MonoBehaviour:
   sizeRange:
   - 0.9
   - 1.1
+  worldBorder:
+  - 100
+  - 1850
 --- !u!54 &1389906938802477967
 Rigidbody:
   m_ObjectHideFlags: 0

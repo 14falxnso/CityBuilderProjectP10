@@ -30,6 +30,9 @@ public class FishGameManager : MonoBehaviour
 
     [SerializeField] private GameObject playField;
 
+    public int maxFishCaught;
+    [SerializeField] private int currentFishCaught;
+
 
     private void Start() {
         StartCoroutine(DepthTimer());
@@ -65,7 +68,13 @@ public class FishGameManager : MonoBehaviour
         }
     }
 
-    private void Update() {
-        
+    public void FishCaught()
+    {
+        currentFishCaught++;
+
+        if(currentFishCaught >= maxFishCaught)
+        {
+            StartCoroutine(EndFishingGame());
+        }
     }
 }

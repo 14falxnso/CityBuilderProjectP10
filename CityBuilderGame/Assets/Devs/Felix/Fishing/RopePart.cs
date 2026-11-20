@@ -7,6 +7,7 @@ public class RopePart : MonoBehaviour
     private RectTransform rect;
     private Vector2 posToBe;
     [SerializeField] private RopePart nextPart;
+    private float speedModifierMakeEndOfGameLookVeryGood = 1f;
     void Start()
     {
         rect = GetComponent<RectTransform>();
@@ -22,6 +23,11 @@ public class RopePart : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
 
+        if (!FishGameManager.Instance.isGameActive)
+        {
+            speedModifierMakeEndOfGameLookVeryGood = 10f;    
+        }
+
         if (nextPart)
         {
             nextPart.TransferPos(pos);
@@ -33,7 +39,7 @@ public class RopePart : MonoBehaviour
         rect.position = new Vector2(Vector2.LerpUnclamped(
             rect.position,
             posToBe,
-            10f * Time.deltaTime
+            10f * speedModifierMakeEndOfGameLookVeryGood * Time.deltaTime
         ).x, rect.position.y);
     }
 }

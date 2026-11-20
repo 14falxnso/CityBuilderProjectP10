@@ -54,6 +54,7 @@ public class FishingMove : MonoBehaviour
         posThatHookShouldBe = new Vector2(pos.x, hookStandardHeight);
 
         //zet de dingesen in de ropeposs dinges (jaja)
+        if(!FishGameManager.Instance.isGameActive) return;
         UpdateRope(posThatHookShouldBe);
     }
 
@@ -81,12 +82,18 @@ public class FishingMove : MonoBehaviour
 
     private void UpdateRope(Vector2 newValue)
     {
+        if (!FishGameManager.Instance.isGameActive)
+        {
+            RopeParts[0].transform.position = hookRect.transform.position;
+            return;    
+        }
+        
         baseRopePart.TransferPos(newValue);
     }
 
     void FixedUpdate() {
         //alleen bewegen als de game ACTIEF is
-        if(!FishGameManager.Instance.isGameActive) return;
+        // if(!FishGameManager.Instance.isGameActive) return;
 
         for(int i = 0; i < RopeParts.Length; i++)
         {
