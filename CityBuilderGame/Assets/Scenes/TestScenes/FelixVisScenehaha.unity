@@ -2961,8 +2961,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FishSpawnerScript
   fishPrefab: {fileID: 5032518714268463483, guid: 95c0e6682ddcec54db75e522abc87742, type: 3}
   spawnTimeRange:
-  - 2
-  - 5
+  - 0
+  - 1
 --- !u!1 &683067747
 GameObject:
   m_ObjectHideFlags: 0
