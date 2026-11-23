@@ -27,7 +27,7 @@ public class EventStream {
 
         server.createContext(Config.data.path + "/events", EventStream::handleEvents);
 
-        server.setExecutor(Executors.newCachedThreadPool());
+        server.setExecutor(Threading.GetExecutor());
         server.start();
 
         GuiApp.instance.log("SSE running on http://localhost:" + Config.data.port + Config.data.path + "/events");
@@ -61,7 +61,7 @@ public class EventStream {
             sendRawToOne(os, "hello", "{\"ok\":true}");
 
             while (true) {
-                Thread.sleep(60_000);
+                Thread.sleep(15_000);
                 os.flush();
             }
         } catch (Exception e) {

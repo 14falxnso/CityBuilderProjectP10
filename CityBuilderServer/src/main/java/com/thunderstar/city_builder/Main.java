@@ -2,6 +2,7 @@ package com.thunderstar.city_builder;
 
 import com.google.gson.Gson;
 import com.thunderstar.city_builder.config.Config;
+import com.thunderstar.city_builder.connection.CurrentPlayerData;
 import com.thunderstar.city_builder.connection.EventStream;
 import com.thunderstar.city_builder.connection.RequestResponse;
 import com.thunderstar.city_builder.database.Database;
@@ -32,14 +33,17 @@ public class Main {
 
                 EventStream.init();
                 RequestResponse.init();
-
-                RequestResponse.RegisterResponse("test", obj -> {
-                    GuiApp.instance.log(new Gson().toJson(obj));
-                    return obj;
-                });
             } catch (Exception e) {
                 GuiApp.instance.logStackTrace(e);
             }
+
+
+            RequestResponse.RegisterResponse("test", obj -> {
+                GuiApp.instance.log(new Gson().toJson(obj));
+                return obj;
+            });
+
+            RequestResponse.RegisterResponse("getKey", CurrentPlayerData::GetKeyRequest);
         });
     }
 }

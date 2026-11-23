@@ -2,11 +2,13 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 public class ServerConnection : MonoBehaviour
 {
@@ -75,7 +77,13 @@ public class ServerConnection : MonoBehaviour
     {
         bool ok = await Connect("localhost:25565", 5000);
         Debug.Log(ok ? "Connected to: " + url : "Failed to connect.", this);
+        
+        if (ok) Debug.Log(await SendRequest<test, test>(new test()));
     }
+    
+    
+    [Serializable]
+    private class test {}
     
  
     public async Task<bool> Connect(string ip, int timeout)
@@ -226,6 +234,152 @@ public class ServerConnection : MonoBehaviour
         
         Disconnect();
     }
+
+
+    public async Task<T> SendRequest<T, U>(U data)
+    {
+        RequestPayload<U> payload = new RequestPayload<U>
+        {
+            type = typeof(T).Name, // event type is name of requested class
+            data = data
+        };
+        
+        int key_id = 0;
+        Key key = new Key{success = false};
+
+        while (!key.success)
+        {
+            key_id = Random.Range(int.MinValue, int.MaxValue);
+            
+            key = await RequestKey(key_id);
+        }
+
+        RequestPayload<SecureData> secure_payload = new RequestPayload<SecureData>
+        {
+            type = "secure",
+            data = new SecureData
+            {
+                key_id = key_id,
+                content = EncodeString(JsonUtility.ToJson(payload), key.key)
+            }
+        };
+        
+        using UnityWebRequest request = new UnityWebRequest(url + "/requests", UnityWebRequest.kHttpVerbPOST);
+        
+        byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(secure_payload));
+        
+        request.uploadHandler = new UploadHandlerRaw(body);
+        
+        request.downloadHandler = new DownloadHandlerBuffer();
+        
+        request.SetRequestHeader("Content-Type", "application/json");
+        
+        await request.SendWebRequest();
+        
+        return JsonUtility.FromJson<T>(request.downloadHandler.text);
+    }
+
+    private async Task<Key> RequestKey(int key_id)
+    {
+        RequestPayload<KeyId> payload = new RequestPayload<KeyId>
+        {
+            type = "getKey",
+            data = new KeyId
+            {
+                key_id = key_id
+            }
+        };
+
+        using UnityWebRequest request = new UnityWebRequest(url + "/requests", UnityWebRequest.kHttpVerbPOST);
+        
+        byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(payload));
+        
+        request.uploadHandler = new UploadHandlerRaw(body);
+        
+        request.downloadHandler = new DownloadHandlerBuffer();
+        
+        request.SetRequestHeader("Content-Type", "application/json");
+        
+        await request.SendWebRequest();
+        
+        return JsonUtility.FromJson<Key>(request.downloadHandler.text);
+    }
+
+
+    private string EncodeString(string str, string base64Key)
+    {
+        byte[] key = Convert.FromBase64String(base64Key);
+        byte[] hmac_key;
+
+        using (SHA256 sha = SHA256.Create())
+            hmac_key = sha.ComputeHash(Combine(Encoding.UTF8.GetBytes("HMAC"), key));
+
+        byte[] iv = new byte[16];
+        using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            rng.GetBytes(iv);
+
+        byte[] ciphertext;
+
+        using (Aes aes = Aes.Create())
+        {
+            aes.KeySize = 256;
+            aes.BlockSize = 128;
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
+            aes.Key = key;
+            aes.IV = iv;
+
+            using (ICryptoTransform encryptor = aes.CreateEncryptor())
+                ciphertext = encryptor.TransformFinalBlock(
+                    Encoding.UTF8.GetBytes(str), 0, 
+                    Encoding.UTF8.GetByteCount(str));
+        }
+        
+        byte[] data = Combine(iv, ciphertext);
+
+        byte[] mac;
+        using (HMACSHA256 hmac = new HMACSHA256(hmac_key))
+            mac = hmac.ComputeHash(data);
+        
+        return Convert.ToBase64String(Combine(data, mac));
+    }
+
+    private byte[] Combine(byte[] a, byte[] b)
+    {
+        byte[] result = new byte[a.Length + b.Length];
+        Buffer.BlockCopy(a, 0, result, 0, a.Length);
+        Buffer.BlockCopy(b, 0, result, a.Length, b.Length);
+        return result;
+    }
+
+
+    [Serializable]
+    private class RequestPayload<T>
+    {
+        public string type;
+        public T data;
+    }
+
+    [Serializable]
+    private class SecureData
+    {
+        public int key_id;
+        public string content;
+    }
+
+    [Serializable]
+    private class Key
+    {
+        public bool success;
+        public string key;
+    }
+
+    [Serializable]
+    private class KeyId
+    {
+        public int key_id;
+    }
+    
 
     private void HandleMessage(string type, string data)
     {
