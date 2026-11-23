@@ -1,5 +1,6 @@
 package com.thunderstar.city_builder.util;
 
+import com.thunderstar.city_builder.connection.EventStream;
 import com.thunderstar.city_builder.ui.GuiApp;
 
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public class Commands {
         });
 
         new Command("echo", 1, args -> GuiApp.instance.log(args.getFirst()), "\"text\"");
+
+        new Command("ping", 0, args -> EventStream.broadcastRaw("ping", "{}"));
     }
 
 

@@ -34,6 +34,8 @@ public class EventStream {
     }
 
     private static void shutdown() {
+        broadcastRaw("bye", "{}");
+
         if (server != null) {
             server.stop(0);
             server = null;
@@ -52,6 +54,8 @@ public class EventStream {
             OutputStream os = ex.getResponseBody();
             clients.add(os);
 
+            os.write("".getBytes(StandardCharsets.UTF_8));
+
             GuiApp.instance.log("Client connected (" + clients.size() + ")");
 
             sendRawToOne(os, "hello", "{\"ok\":true}");
@@ -67,7 +71,7 @@ public class EventStream {
         }
     }
 
-    static void broadcastRaw(String event, String data) {
+    public static void broadcastRaw(String event, String data) {
         Threading.SubmitTask(() -> {
             String payload = "event: " + event + "\n" +
                     "data: " + data + "\n\n";
