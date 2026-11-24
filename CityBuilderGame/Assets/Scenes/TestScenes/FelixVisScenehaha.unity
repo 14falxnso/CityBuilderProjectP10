@@ -3980,6 +3980,7 @@ MonoBehaviour:
     XPgained: 0
     foodGained: 0
     energyUsed: 0
+  fishCaughtStats: []
 --- !u!114 &1149994332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4599,6 +4600,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1750583136}
   m_CullTransparentMesh: 1
+--- !u!1 &1759190252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1759190253}
+  - component: {fileID: 1759190254}
+  m_Layer: 0
+  m_Name: Fishholder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1759190253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759190252}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1087.4567, y: 229.96057, z: 221.99982}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1759190254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759190252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b2020769585cb2459ab30a6b6dcc1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FishSpawnerScript
+  fishPrefab: {fileID: 5032518714268463483, guid: 95c0e6682ddcec54db75e522abc87742, type: 3}
+  spawnTimeRange:
+  - 0
+  - 1
 --- !u!1 &1813071105
 GameObject:
   m_ObjectHideFlags: 0
@@ -5418,3 +5467,4 @@ SceneRoots:
   - {fileID: 1824117751}
   - {fileID: 1513233719}
   - {fileID: 8008598789508388975}
+  - {fileID: 1759190253}

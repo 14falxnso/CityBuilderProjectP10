@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using TMPro;
 using Unity.Mathematics;
 using Unity.Mathematics.Geometry;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.UI;
 
 //kzit dit lowkey te erg uit te werken jaja
 public class FishGameManager : MonoBehaviour
@@ -47,10 +49,14 @@ public class FishGameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI xpField;
     [SerializeField] private TextMeshProUGUI foodGainedField;
     [SerializeField] private TextMeshProUGUI energyUsedField;
+
+    [SerializeField] private Button continueButton;
     
 
     [SerializeField] private EndGameFishStats endGameFishStats;
     public List<FishStats> fishCaughtStats = new List<FishStats>();
+
+    private bool hasGameEndedAlready = false;
 
     private void Start() {
         StartCoroutine(DepthTimer());
@@ -102,7 +108,7 @@ public class FishGameManager : MonoBehaviour
                 1f + s.weight * 1f + s.rarity 
             ) * 5f;
         }
-        
+
         endGameFishStats.foodGained = MathF.Round(w, 2);
         endGameFishStats.XPgained = MathF.Round(x, 2);
 
@@ -131,6 +137,10 @@ public class FishGameManager : MonoBehaviour
 
     public void ShowStatScreen(EndGameFishStats e)
     {
+        //fixes weird bug jaja
+        if(hasGameEndedAlready) return;
+        hasGameEndedAlready = true;
+
         //laat hem WEL weer zien boeeem
         statScreenHolder.SetActive(true);
 
@@ -139,6 +149,34 @@ public class FishGameManager : MonoBehaviour
         foodGainedField.text = "+" + e.foodGained.ToString() + " Food";
         energyUsedField.text = "-" + e.energyUsed.ToString() + " Energy used";
 
+        StartCoroutine(StatScreenAnimation());
+
+    }
+
+    [SerializeField] private float timeBetweenTheCoolAnimation = 0.2f;
+    //cool haha
+    private IEnumerator StatScreenAnimation()
+    {
+        xpField.enabled = false;
+        foodGainedField.enabled = false;
+        energyUsedField.enabled = false;
+        continueButton.enabled = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //lowkey voeg hier coole sfx aan toe 
+        //like hill climb racing type shit :eyes:
+
+        xpField.enabled = true;
+        yield return new WaitForSeconds(timeBetweenTheCoolAnimation);
+
+        foodGainedField.enabled = true;
+        yield return new WaitForSeconds(timeBetweenTheCoolAnimation);
+
+        energyUsedField.enabled = true;
+        yield return new WaitForSeconds(timeBetweenTheCoolAnimation);
+
+        continueButton.enabled = true;
     }
 }
 
