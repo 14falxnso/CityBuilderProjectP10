@@ -18,7 +18,7 @@ public class PurchaseBuilding : MonoBehaviour
 
     [Header("Purchase Info")]
     private bool purchasedBuilding = false;
-    private float notificationTimer;
+    public float notificationTimer;
 
     [Header("Costs")]
     [SerializeField] private int buildingLevel;
@@ -40,14 +40,6 @@ public class PurchaseBuilding : MonoBehaviour
 
     private void Update()
     {
-        if (boughtBuildingMessage.activeSelf)
-        {
-            notificationTimer += Time.deltaTime;
-            if (notificationTimer > 3)
-            {
-
-            }
-        }
         UpdateText();
     }
 
@@ -98,6 +90,7 @@ public class PurchaseBuilding : MonoBehaviour
 
     private void ShowNotification()
     {
+        notificationTimer = 0f;
         boughtBuildingMessage.SetActive(true);
 
         if (purchasedBuilding == false)
@@ -109,6 +102,14 @@ public class PurchaseBuilding : MonoBehaviour
             bbMessageText.text = "Purchased done!";
         }
 
+        CancelInvoke(nameof(HideNotification));
+        Invoke(nameof(HideNotification), 3f);
+    }
+
+    private void HideNotification()
+    {
+        boughtBuildingMessage.SetActive(false);
+        notificationTimer = 0f;
     }
 
 }
