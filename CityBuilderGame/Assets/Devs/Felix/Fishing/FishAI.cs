@@ -18,6 +18,9 @@ public class FishAI : MonoBehaviour
 
     [Header("world border x posses")]
     public float[] worldBorder = new float[2];
+
+    [Header("stats vand de vis")]
+    [SerializeField] private FishStats fishStats;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -46,6 +49,9 @@ public class FishAI : MonoBehaviour
         transform.localScale = curScale * scaleFactor;
 
         transform.position = startPos;
+
+        fishStats.weight = scaleFactor * Random.Range(0.8f, 1.3f);
+        fishStats.rarity = GenerateRarityNumber(0, 10);
 
         //check of de vis aan de ene kant staat en dan uhh spiegel that thang
         if(startPos.x > (20f + 1900f) / 2 && Random.Range(0, 10) > 3)
@@ -115,6 +121,8 @@ public class FishAI : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         Debug.Log("fish found yaaay");
 
+        if(!FishGameManager.Instance.isGameActive) return;
+
         if (other.gameObject.CompareTag("HookCollider"))
         {
             isDead = true;
@@ -126,6 +134,8 @@ public class FishAI : MonoBehaviour
 
     private IEnumerator FishDie()
     {
+        FishGameManager.Instance.fishCaughtStats.Add(fishStats);
+
         if (isFlipped)
         {
             //yup yup yup yup het is gefixed yup yup
@@ -142,4 +152,13 @@ public class FishAI : MonoBehaviour
 
         Destroy(gameObject);
     }
+
+    //idk ik kan geen naam bedenken
+    private float ding = 3f; 
+    private float GenerateRarityNumber(float min, float max)
+    {
+        float r = Mathf.Pow(UnityEngine.Random.value, ding);
+        return min + (int)(r * (max - min + 1));
+    }
 }
+
