@@ -18,6 +18,8 @@ public class ServerConnection : MonoBehaviour
     
     
     [SerializeField] private string path = "/city_builder";
+    [SerializeField] private string testIp = "localhost";
+    [SerializeField] private bool debugConnect = false;
     
     private string url;
     
@@ -80,10 +82,13 @@ public class ServerConnection : MonoBehaviour
 
     private async void Start()
     {
-        bool ok = await Connect("localhost:25565", 5000);
-        Debug.Log(ok ? "Connected to: " + url : "Failed to connect.", this);
+        if (debugConnect)
+        {
+            bool ok = await Connect(testIp + ":25565", 5000);
+            Debug.Log(ok ? "Connected to: " + url : "Failed to connect.", this);
         
-        if (ok) Debug.Log(await SendRequest<test, test>(new test()));
+            if (ok) Debug.Log(await SendRequest<test, test>(new test()));
+        }
     }
     
     
