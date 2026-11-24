@@ -56,10 +56,14 @@ public class FishGameManager : MonoBehaviour
     [SerializeField] private EndGameFishStats endGameFishStats;
     public List<FishStats> fishCaughtStats = new List<FishStats>();
 
+    [Header("wat coole deco dingen")]
+    [SerializeField] private CanvasGroup tutorialGroup;
+
     private bool hasGameEndedAlready = false;
 
     private void Start() {
         StartCoroutine(DepthTimer());
+        StartCoroutine(FadeOutTutorialTab());
 
         //laat de stat screen NIET zien (wel zo handig jaja)
         statScreenHolder.SetActive(false);
@@ -177,6 +181,21 @@ public class FishGameManager : MonoBehaviour
         yield return new WaitForSeconds(timeBetweenTheCoolAnimation);
 
         continueButton.enabled = true;
+    }
+
+    //zo cool
+    //lowkey gewoon fade out maar is cool
+    private IEnumerator FadeOutTutorialTab()
+    {
+        yield return new WaitForSeconds(0.75f);
+
+        for(float i = 1; i > 0; i -= 0.05f)
+        {
+            tutorialGroup.alpha = i;
+            yield return new WaitForFixedUpdate();
+        }
+
+        tutorialGroup.alpha = 0f;
     }
 }
 
