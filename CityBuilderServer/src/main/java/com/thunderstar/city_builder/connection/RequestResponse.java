@@ -26,13 +26,14 @@ public class RequestResponse {
     private static final Gson gson = new Gson();
 
     private static final Map<String, Function<JsonObject, JsonObject>> handlers = new HashMap<>();
+    private static final Map<String, Function<JsonObject, JsonObject>> secureHandlers = new HashMap<>();
 
     public static void init() {
         server.createContext(Config.data.path + "/requests", RequestResponse::handleRequests);
 
         GuiApp.instance.log("HTTP POST endpoint running on http://localhost:" + Config.data.port + Config.data.path + "/requests");
 
-        RegisterResponse("secure", obj -> {
+        RegisterResponse("secure", false, obj -> {
             String key = CurrentPlayerData.GetKeyById(obj.get("key_id").getAsInt());
 
             String request_str = null;
@@ -48,7 +49,7 @@ public class RequestResponse {
             String type = request.get("type").getAsString();
             JsonObject data = request.getAsJsonObject("data");
 
-            return handlers.get(type).apply(data);
+            return secureHandlers.get(type).apply(data);
         });
     }
 
@@ -159,8 +160,9 @@ public class RequestResponse {
         return response;
     }
 
-    public static void RegisterResponse(String type, Function<JsonObject, JsonObject> handler) {
-        handlers.put(type, handler);
+    public static void RegisterResponse(String type, boolean secure, Function<JsonObject, JsonObject> handler) {
+        if (!secure) handlers.put(type, handler);
+        secureHandlers.put(type, handler);
 
         GuiApp.instance.log("Registered request handler to request type: " + type);
     }

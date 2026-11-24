@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,10 @@ using Random = UnityEngine.Random;
 
 public class ServerConnection : MonoBehaviour
 {
+    private readonly byte[] dhPrime = Convert.FromBase64String("//////////+t+FRYortKmq/cViAnPTzx2LnFg84tNpWp4TZBFGQz+8yTnc4kmz75fS/jY2MMddj2gbICrsRhetPfHtXV/WVhJDP1H18GbtCFY2VVPe0a87VXE15/V8k1mE8McODmi3fipona8+/och3xWKE2rec1MKzKT0g6eXq8CrGCsyT7YdEIqUuyyOP7uWrat2DX9GgdT0Kj3jlN9K5W7edjcrsZCwenyO4KbXCeAvzhzffi7MA0BM0oNC9hkXL+nOmFg/+OTxIy7vKBg8P+OxtMb61zO7X8vC7CIAXFjvGDfRaDssbzSibBsu/6iGtCOGEoXJf//////////w==");
+    private readonly byte[] dhGenerator = { 0x02 };
+    
+    
     [SerializeField] private string path = "/city_builder";
     
     private string url;
@@ -246,13 +251,23 @@ public class ServerConnection : MonoBehaviour
         
         int key_id = 0;
         Key key = new Key{success = false};
+        
+        byte[] private_key = new byte[32];
+        RandomNumberGenerator.Fill(private_key);
 
         while (!key.success)
         {
             key_id = Random.Range(int.MinValue, int.MaxValue);
             
-            key = await RequestKey(key_id);
+            key = await RequestKey(key_id, private_key);
         }
+
+        byte[] shared_secret = ModPow(Convert.FromBase64String(key.public_key), private_key, dhPrime, 256);
+
+        using SHA256 sha = SHA256.Create();
+        
+        var encryption_key = Convert.ToBase64String(sha.ComputeHash(shared_secret));
+        
 
         RequestPayload<SecureData> secure_payload = new RequestPayload<SecureData>
         {
@@ -260,7 +275,7 @@ public class ServerConnection : MonoBehaviour
             data = new SecureData
             {
                 key_id = key_id,
-                content = EncodeString(JsonUtility.ToJson(payload), key.key)
+                content = EncodeString(JsonUtility.ToJson(payload), encryption_key)
             }
         };
         
@@ -279,14 +294,17 @@ public class ServerConnection : MonoBehaviour
         return JsonUtility.FromJson<T>(request.downloadHandler.text);
     }
 
-    private async Task<Key> RequestKey(int key_id)
+    private async Task<Key> RequestKey(int key_id, byte[] private_key)
     {
+        byte[] public_key = ModPow(dhGenerator, private_key, dhPrime, 256);
+        
         RequestPayload<KeyId> payload = new RequestPayload<KeyId>
         {
             type = "getKey",
             data = new KeyId
             {
-                key_id = key_id
+                key_id = key_id,
+                public_key = Convert.ToBase64String(public_key)
             }
         };
 
@@ -352,6 +370,22 @@ public class ServerConnection : MonoBehaviour
         return result;
     }
 
+    private byte[] ModPow(byte[] gen, byte[] power, byte[] mod, int outputBytes)
+    {
+        BigInteger result = BigInteger.ModPow(
+            new BigInteger(gen, true, true),
+            new BigInteger(power, true, true),
+            new BigInteger(mod, true, true));
+        
+        byte[] raw = result.ToByteArray(true, true);
+        
+        byte[] output = new byte[outputBytes];
+        
+        Buffer.BlockCopy(raw, 0, output, outputBytes - raw.Length, raw.Length);
+        
+        return output;
+    }
+
 
     [Serializable]
     private class RequestPayload<T>
@@ -371,13 +405,14 @@ public class ServerConnection : MonoBehaviour
     private class Key
     {
         public bool success;
-        public string key;
+        public string public_key;
     }
 
     [Serializable]
     private class KeyId
     {
         public int key_id;
+        public string public_key;
     }
     
 

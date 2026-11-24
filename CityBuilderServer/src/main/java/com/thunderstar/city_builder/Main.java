@@ -38,12 +38,12 @@ public class Main {
             }
 
 
-            RequestResponse.RegisterResponse("test", obj -> {
+            RequestResponse.RegisterResponse("test", false, obj -> {
                 GuiApp.instance.log(new Gson().toJson(obj));
                 return obj;
             });
 
-            RequestResponse.RegisterResponse("getKey", CurrentPlayerData::GetKeyRequest);
+            RequestResponse.RegisterResponse("getKey", false, CurrentPlayerData::GetKeyRequest);
         });
     }
 }
