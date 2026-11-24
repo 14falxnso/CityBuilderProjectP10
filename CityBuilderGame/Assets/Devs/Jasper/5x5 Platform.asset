@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 5x5 Platform
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSriptable
   buildingPrefab: {fileID: 919132149155446097, guid: dda73bee3739122408d8606cef7a8deb, type: 3}
-  size: {x: 5, y: 5}
+  size: {x: 6, y: 8}
   yOffset: 0.5
   pivotOffsetX: 0
-  pivotOffsetZ: 0.5
+  pivotOffsetZ: 0

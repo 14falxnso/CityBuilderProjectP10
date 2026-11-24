@@ -600,13 +600,13 @@ MonoBehaviour:
   rotateSmoothTime: 0.15
   zoomSpeed: 5
   minDistance: 3
-  maxDistance: 25
+  maxDistance: 50
   zoomSmoothTime: 0.1
   zoomToCursor: 1
   minXBound: -25
   maxXBound: 25
   minZBound: -50
-  maxZBound: 50
+  maxZBound: 80
   ignoreWhenPointerOverUI: 1
 --- !u!1 &1710528797
 GameObject:
@@ -784,6 +784,7 @@ MonoBehaviour:
   gridZ: -19
   lineMaterial: {fileID: 2100000, guid: 821d1b36fb0ca4d4084a8d6bbeff7439, type: 2}
   lineWidth: 0.02
+  BuildingModeActive: 1
 --- !u!4 &1853070735
 Transform:
   m_ObjectHideFlags: 0
@@ -811,6 +812,7 @@ GameObject:
   - component: {fileID: 1881765385}
   - component: {fileID: 1881765384}
   - component: {fileID: 1881765383}
+  - component: {fileID: 1881765387}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -912,6 +914,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1881765387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1881765382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a5ccc8afb18204e9cc2558308ec456, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaterCleanMask
 --- !u!1 &2135513697
 GameObject:
   m_ObjectHideFlags: 0

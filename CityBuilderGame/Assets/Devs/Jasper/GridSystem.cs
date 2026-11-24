@@ -38,12 +38,12 @@ public class GridSystem : MonoBehaviour
 
     private void Awake()
     {
-        BuildingModeActive = false;
         objectToPlace = buildingData != null ? buildingData.buildingPrefab : objectToPlace;
         yOffset = buildingData != null ? buildingData.yOffset : yOffset;
         pivotOffsetX = buildingData != null ? buildingData.pivotOffsetX : pivotOffsetX;
         pivotOffsetZ = buildingData != null ? buildingData.pivotOffsetZ : pivotOffsetZ;
         buildingSize = buildingData != null ? buildingData.size : buildingSize;
+        BuildingModeActive = true;
         occupiedCells.Clear();
     }
     private void Start()
