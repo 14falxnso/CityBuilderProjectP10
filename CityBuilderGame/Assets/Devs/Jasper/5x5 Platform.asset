@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d660a83a87703bc47b5c3243aca243f6, type: 3}
   m_Name: 5x5 Platform
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSriptable
-  buildingPrefab: {fileID: 919132149155446097, guid: dda73bee3739122408d8606cef7a8deb, type: 3}
+  buildingPrefab: {fileID: 5032518714268463483, guid: 95c0e6682ddcec54db75e522abc87742, type: 3}
   size: {x: 6, y: 8}
   yOffset: 0.5
   pivotOffsetX: 0
