@@ -195,6 +195,8 @@ public class GridSystem : MonoBehaviour
         lr.SetPosition(1, end);
     }
 
+
+
     private void OnDrawGizmos()
     {
         if (!BuildingModeActive) return;
